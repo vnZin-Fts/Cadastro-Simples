@@ -11,5 +11,5 @@ export function cadastroUsuario(usuarios) {
     "INSERT INTO usuarios (nome_usuario, email, senha) VALUES (@nome_usuario, @email, @senha)",
   );
 
-  inserir.run(usuarios);
+  return inserir.run(usuarios);
 }
