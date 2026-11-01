@@ -1,5 +1,10 @@
 import express from "express";
-import { cadastroUsuario, deletarUsuario, listaUsuarios } from "./database.js";
+import {
+  cadastroUsuario,
+  deletarUsuario,
+  listaUsuarios,
+  atualizarUsuario,
+} from "./database.js";
 
 const rota = express.Router();
 
@@ -42,6 +47,43 @@ rota.post("/cadastro_usuarios", (req, res) => {
         erro: "Erro interno do servidor",
       });
     }
+  }
+});
+
+rota.patch("/usuarios/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const { nome_usuario } = req.body;
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({
+      mensagem: "id invalido!",
+    });
+  }
+
+  if (typeof nome_usuario !== "string" || !nome_usuario.trim()) {
+    return res.status(404).json({
+      mensagem: "Usuario invalido",
+    });
+  }
+
+  try {
+    const modificacao = atualizarUsuario(id, nome_usuario);
+
+    if (modificacao.changes === 0) {
+      return res.status(400).json({
+        mensagem: "Usuario não encontrado",
+      });
+    } else {
+      return res.status(200).json({
+        mensagem: "Modificação feita com sucesso",
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao alterar os valores:", error.message);
+
+    return res.status(500).json({
+      mensagem: "Erro interno do servidor",
+    });
   }
 });
 
