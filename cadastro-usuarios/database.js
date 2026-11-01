@@ -25,3 +25,11 @@ export function listaUsuarios() {
 
   return listagem.all();
 }
+
+export function atualizarUsuario(id, novoNome) {
+  const atualizacao = db.prepare(
+    "UPDATE usuarios SET nome_usuario = ? WHERE id = ?",
+  );
+
+  return atualizacao.run(novoNome, id);
+}
