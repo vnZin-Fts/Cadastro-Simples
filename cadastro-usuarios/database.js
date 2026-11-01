@@ -13,3 +13,15 @@ export function cadastroUsuario(usuarios) {
 
   return inserir.run(usuarios);
 }
+
+export function deletarUsuario(id) {
+  const deletar = db.prepare("DELETE FROM usuarios WHERE id = ?");
+
+  return deletar.run(id);
+}
+
+export function listaUsuarios() {
+  const listagem = db.prepare("SELECT id, nome_usuario, email FROM usuarios");
+
+  return listagem.all();
+}
