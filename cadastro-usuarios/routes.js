@@ -4,7 +4,9 @@ import {
   deletarUsuario,
   listaUsuarios,
   atualizarUsuario,
+  buscarUsuarioPorEmail,
 } from "./database.js";
+import argon2 from "argon2";
 
 const rota = express.Router();
 
@@ -17,7 +19,45 @@ rota.get("/usuarios", (req, res) => {
   });
 });
 
-rota.post("/cadastro_usuarios", (req, res) => {
+rota.post("/login", async (req, res) => {
+  const { senha, email } = req.body;
+
+  if (!senha || !email) {
+    return res.status(400).json({
+      mensagem: "Campos não prenchidos",
+    });
+  }
+
+  try {
+    const busca = buscarUsuarioPorEmail(email);
+
+    if (!busca) {
+      return res.status(401).json({
+        mensagem: "Email ou senha inválidos",
+      });
+    }
+
+    const senhaValida = await argon2.verify(busca.senha, senha);
+
+    if (!senhaValida) {
+      return res.status(401).json({
+        mensagem: "Email ou senha invalidos!",
+      });
+    } else {
+      return res.status(200).json({
+        mensagem: "Login realizado com sucesso!",
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao alterar email ou senha", error.message);
+
+    return res.status(500).json({
+      mensagem: "erro interno no servidor",
+    });
+  }
+});
+
+rota.post("/cadastro_usuarios", async (req, res) => {
   const { nome_usuario, email, senha } = req.body;
 
   if (!nome_usuario || !email || !senha) {
@@ -28,7 +68,9 @@ rota.post("/cadastro_usuarios", (req, res) => {
   }
 
   try {
-    const novoUsuario = cadastroUsuario({ nome_usuario, email, senha });
+    const hash = await argon2.hash(senha);
+
+    const novoUsuario = cadastroUsuario({ nome_usuario, email, senha: hash });
 
     return res.status(201).json({
       mensagem: "Usuario cadastrado com sucesso!",

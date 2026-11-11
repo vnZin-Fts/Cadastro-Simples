@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Usuários</title>
+  <link rel="stylesheet" href="./css/painel.css">
+</head>
+
+<body>
+
+  <div class="painel-container">
+    <header class="painel-header">
+      <h2>Painel Administrativo</h2>
+      <a href="index.html" class="btn-sair">Sair</a>
+    </header>
+
+    <div class="tabela-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-usuarios">
+          <!-- O JavaScript vai injetar as linhas <tr> dos usuários vindos do SQLite aqui -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="./js/painel.js"></script>
+</body>
+
+</html>

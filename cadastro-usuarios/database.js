@@ -33,3 +33,11 @@ export function atualizarUsuario(id, novoNome) {
 
   return atualizacao.run(novoNome, id);
 }
+
+export function buscarUsuarioPorEmail(email) {
+  const busacaEmailUsuario = db.prepare(
+    "SELECT email, senha FROM usuarios WHERE email = ? ",
+  );
+
+  return busacaEmailUsuario.get(email);
+}
